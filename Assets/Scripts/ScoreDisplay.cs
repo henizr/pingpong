@@ -1,18 +1,39 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
+using UnityEngine.UI;
 
 public class ScoreDisplay : MonoBehaviour
 {
-    // Start is called before the first frame update
+    [SerializeField] Text leftText, rightText;
     void Start()
     {
-        
+        ScoreBoard.ClientOnLeftScoreUpdated += HandleLeftScoreUpdate;
+
+        ScoreBoard.ClientOnRightScoreUpdated += HandleRightScoreUpdate;
     }
 
-    // Update is called once per frame
-    void Update()
+
+
+    void OnDestroy()
     {
-        
+
+        ScoreBoard.ClientOnLeftScoreUpdated -= HandleLeftScoreUpdate;
+
+        ScoreBoard.ClientOnRightScoreUpdated -= HandleRightScoreUpdate;
+
     }
+
+    private void HandleLeftScoreUpdate(int score)
+    {
+        leftText.text = score.ToString();
+    }
+
+    private void HandleRightScoreUpdate(int score)
+    {
+        rightText.text = score.ToString();
+    }
+
 }

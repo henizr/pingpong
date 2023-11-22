@@ -6,10 +6,28 @@ using UnityEngine;
 
 public class ScoreBoard : NetworkBehaviour
 {
-    [SyncVar]
+    [SyncVar(hook = nameof(HandleLeftScoreUpdated))]
     int leftScore;
-    [SyncVar]
+    [SyncVar(hook = nameof(HandleRightScoreUpdated))]
     int rightScore;
+
+    public static event Action<int> ClientOnLeftScoreUpdated;
+    public static event Action<int> ClientOnRightScoreUpdated;
+
+
+    void HandleLeftScoreUpdated(int oldScore, int newScore)
+    {
+
+        ClientOnLeftScoreUpdated?.Invoke(newScore);
+
+    }
+
+    void HandleRightScoreUpdated(int oldScore, int newScore)
+    {
+
+        ClientOnRightScoreUpdated?.Invoke(newScore);
+
+    }
 
     public override void OnStartServer()
     {
