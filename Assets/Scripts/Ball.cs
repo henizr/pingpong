@@ -1,4 +1,5 @@
 using Mirror;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,7 +8,7 @@ public class Ball : NetworkBehaviour
 {
     [SerializeField] float speed = 30f;
     [SerializeField] Rigidbody2D rigidbody2d;
-
+    public static event Action<string> OnGoal;
 
     public override void OnStartServer()
     {
@@ -23,5 +24,25 @@ public class Ball : NetworkBehaviour
         float y = (transform.position.y - collision.transform.position.y) / collision.collider.bounds.size.y;
         Vector2 direction = new Vector2(x, y).normalized;
         rigidbody2d.velocity = direction * speed;
+    }
+
+    [ServerCallback]
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+
+        switch (collision.tag)
+
+        {
+
+            case "Left":
+
+            case "Right":
+
+                OnGoal?.Invoke(collision.tag);
+
+                break;
+
+        }
+
     }
 }

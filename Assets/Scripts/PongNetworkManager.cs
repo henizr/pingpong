@@ -7,8 +7,8 @@ public class PongNetworkManager : NetworkManager
 {
 
     [SerializeField] Transform leftPaddleSpawn, rightPaddleSpawn;
-    [SerializeField] GameObject ballPrefab;
-    GameObject ball;
+    [SerializeField] GameObject ballPrefab, scoreBoardPrefab;
+    GameObject ball, scoreBoard;
 
 
     public override void OnServerAddPlayer(NetworkConnectionToClient conn)
@@ -22,7 +22,8 @@ public class PongNetworkManager : NetworkManager
 
             ball = Instantiate(ballPrefab);
             NetworkServer.Spawn(ball);
-
+            scoreBoard = Instantiate(scoreBoardPrefab);
+            NetworkServer.Spawn(scoreBoard);
         }
     }
 
@@ -30,6 +31,7 @@ public class PongNetworkManager : NetworkManager
     {
         base.OnServerDisconnect(conn);
         if (ball) NetworkServer.Destroy(ball);
+        if (scoreBoard) NetworkServer.Destroy(scoreBoard);
     }
 
 }
